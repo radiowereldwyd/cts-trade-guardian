@@ -59,17 +59,22 @@ const demoTrades = [
   { id: 3, instrument: 'GBP/USD', type: 'Long', lot_size: 0.08, entry: 1.2678, take_profit: 1.273, stop_loss: 1.264, status: 'CLOSED', profit: -34.1, confidence: 79, timeframe: '5M', result: 'LOSS' }
 ];
 
+const CHART_RENDER_DELAY_MS = 500;
+const CHART_RESIZE_DEBOUNCE_MS = 100;
+
 // ===== CANDLESTICK CHART =====
 function drawCandlestickChart() {
-  const defaultCanvasWidth = 300;
+  const defaultCanvasWidth = 280;
   const sellSignalOffset = 2;
   // 0.5 is neutral drift; lower values bias simulated candles upward.
   const priceChangeBias = 0.45;
   const canvas = document.getElementById('candlestick-chart');
   if (!canvas) return;
   
-  // Set actual pixel size
-  canvas.width = canvas.offsetWidth || defaultCanvasWidth;
+  // Get actual rendered width
+  const rect = canvas.getBoundingClientRect();
+  const fallbackWidth = (canvas.parentElement?.offsetWidth || 0) - 20;
+  canvas.width = rect.width > 0 ? rect.width : (fallbackWidth > 0 ? fallbackWidth : defaultCanvasWidth);
   canvas.height = 180;
   
   const ctx = canvas.getContext('2d');
@@ -285,9 +290,18 @@ window.addEventListener('click', (e) => {
   if (e.target.id === 'signalModal') closeModal();
 });
 
-drawCandlestickChart();
-setInterval(drawCandlestickChart, 60000);
-window.addEventListener('resize', drawCandlestickChart);
+window.addEventListener('load', function() {
+  // Delay initial render so layout has finalized and canvas width is measurable.
+  setTimeout(function() {
+    drawCandlestickChart();
+  }, CHART_RENDER_DELAY_MS);
+
+  setInterval(drawCandlestickChart, 60000);
+});
+
+window.addEventListener('resize', function() {
+  setTimeout(drawCandlestickChart, CHART_RESIZE_DEBOUNCE_MS);
+});
 loadDashboard();
 
 // ===== AI SIGNAL POPUP =====
@@ -297,10 +311,27 @@ setTimeout(function() {
   if (popup) popup.classList.add('active');
 }, SIGNAL_POPUP_DELAY_MS);
 
-const popupCloseBtn = document.getElementById('signalPopupCloseBtn');
-if (popupCloseBtn) {
-  popupCloseBtn.addEventListener('click', function() {
-    const popup = document.getElementById('signalPopup');
-    if (popup) popup.classList.remove('active');
-  });
+function initializeSignalPopupHandlers() {
+  const closeButton = document.getElementById('popupCloseBtn');
+  const overlay = document.getElementById('signalPopup');
+
+  if (closeButton) {
+    closeButton.addEventListener('click', function() {
+      if (overlay) overlay.classList.remove('active');
+    });
+  }
+
+  if (overlay) {
+    overlay.addEventListener('click', function(e) {
+      if (e.target === overlay) {
+        overlay.classList.remove('active');
+      }
+    });
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeSignalPopupHandlers);
+} else {
+  initializeSignalPopupHandlers();
 }
