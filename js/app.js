@@ -172,3 +172,11 @@ setTimeout(function() {
   const popup = document.getElementById('signalPopup');
   if (popup) popup.classList.add('active');
 }, 3000);
+
+const popupCloseBtn = document.getElementById('signalPopupCloseBtn');
+if (popupCloseBtn) {
+  popupCloseBtn.addEventListener('click', function() {
+    const popup = document.getElementById('signalPopup');
+    if (popup) popup.classList.remove('active');
+  });
+}
