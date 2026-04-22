@@ -7,12 +7,13 @@
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
+  <canvas id="sparkle-canvas"></canvas>
   <main class="page-container">
     <header class="app-header">
       <img src="logo.png" alt="CTS Trade Guardian Logo" class="logo-img" />
       <div class="logo-tagline">Your Smart Trading Protector</div>
-      <hr class="gold-streak" />
     </header>
+    <div class="gold-streak"></div>
 
     <section class="signal-chart-grid">
       <article class="signal-panel">
@@ -33,6 +34,7 @@
         </div>
       </article>
     </section>
+    <div class="gold-streak"></div>
 
     <section class="current-trade-bar">
       <div class="current-trade-row">
@@ -46,8 +48,7 @@
         <span>Losses: <b id="lossesCount" style="color:var(--red)">2</b> | 📈</span>
       </div>
     </section>
-
-    <hr class="gold-streak" />
+    <div class="gold-streak"></div>
     <div class="track-banner">Your Smart Trading Protector</div>
 
     <footer class="footer">© 2026 CTS Cyber Solutions - All Rights Reserved.</footer>
@@ -89,5 +90,24 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/config.js"></script>
   <script src="js/app.js"></script>
+
+  <!-- CTS AI SIGNAL POPUP -->
+  <div class="signal-popup-overlay" id="signalPopup">
+    <div class="signal-popup">
+      <div class="popup-icon">🐂</div>
+      <div class="popup-title">⚡ CTS AI SIGNAL ALERT!</div>
+      <div class="popup-badge">BULLISH</div>
+      <div class="popup-details">
+        Trade Type: <span>Long</span><br>
+        Instrument: <span>XAU/USD - Gold</span><br>
+        Lot Size: <span>0.05</span><br>
+        Take Profit: <span>1960.00</span><br>
+        Stop Loss: <span>1930.00</span>
+      </div>
+      <button class="popup-close-btn" onclick="document.getElementById('signalPopup').classList.remove('active')">
+        ✅ GOT IT!
+      </button>
+    </div>
+  </div>
 </body>
 </html>
