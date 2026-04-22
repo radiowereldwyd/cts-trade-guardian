@@ -312,11 +312,11 @@ setTimeout(function() {
 }, SIGNAL_POPUP_DELAY_MS);
 
 function initializeSignalPopupHandlers() {
-  const closeBtn = document.getElementById('popupCloseBtn');
+  const closeButton = document.getElementById('popupCloseBtn');
   const overlay = document.getElementById('signalPopup');
 
-  if (closeBtn) {
-    closeBtn.addEventListener('click', function() {
+  if (closeButton) {
+    closeButton.addEventListener('click', function() {
       if (overlay) overlay.classList.remove('active');
     });
   }
