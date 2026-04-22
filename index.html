@@ -87,14 +87,7 @@
     </div>
   </div>
 
-  <div id="toast" class="toast hidden"></div>
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/config.js"></script>
-  <script src="js/app.js"></script>
-
-  <!-- CTS AI SIGNAL POPUP -->
+  <!-- CTS AI SIGNAL POPUP — placed BEFORE scripts so button exists when JS runs -->
   <div class="signal-popup-overlay" id="signalPopup">
     <div class="signal-popup">
       <div class="popup-icon">🐂</div>
@@ -110,5 +103,12 @@
       <button class="popup-close-btn" id="popupCloseBtn">✅ GOT IT!</button>
     </div>
   </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>
