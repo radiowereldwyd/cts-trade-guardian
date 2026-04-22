@@ -59,6 +59,9 @@ const demoTrades = [
   { id: 3, instrument: 'GBP/USD', type: 'Long', lot_size: 0.08, entry: 1.2678, take_profit: 1.273, stop_loss: 1.264, status: 'CLOSED', profit: -34.1, confidence: 79, timeframe: '5M', result: 'LOSS' }
 ];
 
+const CHART_RENDER_DELAY_MS = 500;
+const CHART_RESIZE_DEBOUNCE_MS = 100;
+
 // ===== CANDLESTICK CHART =====
 function drawCandlestickChart() {
   const defaultCanvasWidth = 280;
@@ -288,14 +291,15 @@ window.addEventListener('click', (e) => {
 });
 
 window.addEventListener('load', function() {
+  // Delay initial render so layout has finalized and canvas width is measurable.
   setTimeout(function() {
     drawCandlestickChart();
-  }, 500);
+  }, CHART_RENDER_DELAY_MS);
 });
 
 setInterval(drawCandlestickChart, 60000);
 window.addEventListener('resize', function() {
-  setTimeout(drawCandlestickChart, 100);
+  setTimeout(drawCandlestickChart, CHART_RESIZE_DEBOUNCE_MS);
 });
 loadDashboard();
 
@@ -308,16 +312,14 @@ setTimeout(function() {
 
 document.addEventListener('DOMContentLoaded', function() {
   const closeBtn = document.getElementById('popupCloseBtn');
+  const overlay = document.getElementById('signalPopup');
+
   if (closeBtn) {
     closeBtn.addEventListener('click', function() {
-      const popup = document.getElementById('signalPopup');
-      if (popup) popup.classList.remove('active');
+      if (overlay) overlay.classList.remove('active');
     });
   }
-});
 
-document.addEventListener('DOMContentLoaded', function() {
-  const overlay = document.getElementById('signalPopup');
   if (overlay) {
     overlay.addEventListener('click', function(e) {
       if (e.target === overlay) {
