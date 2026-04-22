@@ -168,10 +168,11 @@ drawChart();
 loadDashboard();
 
 // ===== AI SIGNAL POPUP =====
+const SIGNAL_POPUP_DELAY_MS = 3000;
 setTimeout(function() {
   const popup = document.getElementById('signalPopup');
   if (popup) popup.classList.add('active');
-}, 3000);
+}, SIGNAL_POPUP_DELAY_MS);
 
 const popupCloseBtn = document.getElementById('signalPopupCloseBtn');
 if (popupCloseBtn) {
