@@ -1,3 +1,58 @@
+// ===== SPARKLE PARTICLES =====
+(function() {
+  const canvas = document.getElementById('sparkle-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function createParticle() {
+    return {
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      size: Math.random() * 2.5 + 0.5,
+      opacity: Math.random(),
+      speed: Math.random() * 0.4 + 0.1,
+      twinkle: Math.random() * 0.02 + 0.005,
+      growing: Math.random() > 0.5
+    };
+  }
+
+  for (let i = 0; i < 120; i++) {
+    particles.push(createParticle());
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      if (p.growing) {
+        p.opacity += p.twinkle;
+        if (p.opacity >= 1) p.growing = false;
+      } else {
+        p.opacity -= p.twinkle;
+        if (p.opacity <= 0) p.growing = true;
+      }
+      p.y -= p.speed;
+      if (p.y < 0) {
+        p.y = canvas.height;
+        p.x = Math.random() * canvas.width;
+      }
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(240, 185, 11, ${p.opacity})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
 const demoTrades = [
   { id: 1, instrument: 'XAU/USD', type: 'Long', lot_size: 0.05, entry: 1942.15, take_profit: 1960.0, stop_loss: 1930.0, status: 'OPEN', profit: 245.8, confidence: 86, timeframe: '1H' },
   { id: 2, instrument: 'EUR/USD', type: 'Short', lot_size: 0.12, entry: 1.0862, take_profit: 1.079, stop_loss: 1.0899, status: 'CLOSED', profit: 58.2, confidence: 81, timeframe: '15M', result: 'WIN' },
@@ -111,4 +166,18 @@ window.addEventListener('click', (e) => {
 
 drawChart();
 loadDashboard();
-setTimeout(() => showSignalModal(demoTrades[0]), 3000);
+
+// ===== AI SIGNAL POPUP =====
+const SIGNAL_POPUP_DELAY_MS = 3000;
+setTimeout(function() {
+  const popup = document.getElementById('signalPopup');
+  if (popup) popup.classList.add('active');
+}, SIGNAL_POPUP_DELAY_MS);
+
+const popupCloseBtn = document.getElementById('signalPopupCloseBtn');
+if (popupCloseBtn) {
+  popupCloseBtn.addEventListener('click', function() {
+    const popup = document.getElementById('signalPopup');
+    if (popup) popup.classList.remove('active');
+  });
+}
