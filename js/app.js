@@ -61,15 +61,17 @@ const demoTrades = [
 
 // ===== CANDLESTICK CHART =====
 function drawCandlestickChart() {
-  const defaultCanvasWidth = 300;
+  const defaultCanvasWidth = 280;
   const sellSignalOffset = 2;
   // 0.5 is neutral drift; lower values bias simulated candles upward.
   const priceChangeBias = 0.45;
   const canvas = document.getElementById('candlestick-chart');
   if (!canvas) return;
   
-  // Set actual pixel size
-  canvas.width = canvas.offsetWidth || defaultCanvasWidth;
+  // Get actual rendered width
+  const rect = canvas.getBoundingClientRect();
+  const fallbackWidth = (canvas.parentElement?.offsetWidth || 0) - 20;
+  canvas.width = rect.width > 0 ? rect.width : (fallbackWidth > 0 ? fallbackWidth : defaultCanvasWidth);
   canvas.height = 180;
   
   const ctx = canvas.getContext('2d');
@@ -285,9 +287,16 @@ window.addEventListener('click', (e) => {
   if (e.target.id === 'signalModal') closeModal();
 });
 
-drawCandlestickChart();
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    drawCandlestickChart();
+  }, 500);
+});
+
 setInterval(drawCandlestickChart, 60000);
-window.addEventListener('resize', drawCandlestickChart);
+window.addEventListener('resize', function() {
+  setTimeout(drawCandlestickChart, 100);
+});
 loadDashboard();
 
 // ===== AI SIGNAL POPUP =====
@@ -297,10 +306,23 @@ setTimeout(function() {
   if (popup) popup.classList.add('active');
 }, SIGNAL_POPUP_DELAY_MS);
 
-const popupCloseBtn = document.getElementById('signalPopupCloseBtn');
-if (popupCloseBtn) {
-  popupCloseBtn.addEventListener('click', function() {
-    const popup = document.getElementById('signalPopup');
-    if (popup) popup.classList.remove('active');
-  });
-}
+document.addEventListener('DOMContentLoaded', function() {
+  const closeBtn = document.getElementById('popupCloseBtn');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', function() {
+      const popup = document.getElementById('signalPopup');
+      if (popup) popup.classList.remove('active');
+    });
+  }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  const overlay = document.getElementById('signalPopup');
+  if (overlay) {
+    overlay.addEventListener('click', function(e) {
+      if (e.target === overlay) {
+        overlay.classList.remove('active');
+      }
+    });
+  }
+});
