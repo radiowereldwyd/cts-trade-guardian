@@ -61,11 +61,15 @@ const demoTrades = [
 
 // ===== CANDLESTICK CHART =====
 function drawCandlestickChart() {
+  const defaultCanvasWidth = 300;
+  const sellSignalOffset = 2;
+  // 0.5 is neutral drift; lower values bias simulated candles upward.
+  const priceChangeBias = 0.45;
   const canvas = document.getElementById('candlestick-chart');
   if (!canvas) return;
   
   // Set actual pixel size
-  canvas.width = canvas.offsetWidth || 300;
+  canvas.width = canvas.offsetWidth || defaultCanvasWidth;
   canvas.height = 180;
   
   const ctx = canvas.getContext('2d');
@@ -93,7 +97,7 @@ function drawCandlestickChart() {
   
   for (let i = 0; i < numCandles; i++) {
     const open = price;
-    const change = (Math.random() - 0.45) * 8;
+    const change = (Math.random() - priceChangeBias) * 8;
     const close = open + change;
     const high = Math.max(open, close) + Math.random() * 4;
     const low = Math.min(open, close) - Math.random() * 4;
@@ -130,7 +134,7 @@ function drawCandlestickChart() {
   ctx.stroke();
 
   // Draw SELL signal line (dashed red at top)
-  const sellPrice = maxPrice - 2;
+  const sellPrice = maxPrice - sellSignalOffset;
   const sellY = toY(sellPrice);
   ctx.strokeStyle = '#ff1744';
   ctx.beginPath();
@@ -163,9 +167,10 @@ function drawCandlestickChart() {
   });
 
   // Draw BUY arrow signal on last green candle
-  const lastGreen = candles.reduce((last, c, i) => c.close > c.open ? i : last, 10);
-  const arrowX = padLeft + lastGreen * candleWidth + candleWidth / 2;
-  const arrowY = toY(candles[lastGreen].low) + 12;
+  const lastGreen = candles.reduce((last, c, i) => c.close > c.open ? i : last, -1);
+  const signalCandleIndex = lastGreen >= 0 ? lastGreen : candles.length - 1;
+  const arrowX = padLeft + signalCandleIndex * candleWidth + candleWidth / 2;
+  const arrowY = toY(candles[signalCandleIndex].low) + 12;
   
   ctx.fillStyle = '#00c853';
   ctx.font = 'bold 14px Arial';
@@ -181,7 +186,7 @@ function drawCandlestickChart() {
   const now = new Date();
   for (let i = 0; i < numCandles; i += 4) {
     const t = new Date(now.getTime() - (numCandles - i) * 60000);
-    const timeStr = t.getHours().toString().padStart(2,'0') + ':' + t.getMinutes().toString().padStart(2,'0');
+    const timeStr = `${t.getHours().toString().padStart(2, '0')}:${t.getMinutes().toString().padStart(2, '0')}`;
     const x = padLeft + i * candleWidth + candleWidth / 2;
     ctx.fillText(timeStr, x, height - 2);
     
