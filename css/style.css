@@ -41,7 +41,6 @@ body::after{
 }
 .page-container{max-width:480px;margin:0 auto;min-height:100vh;padding:0 14px 88px;position:relative;z-index:1}
 .app-header{text-align:center;padding:16px 4px 8px}
-.logo-svg{width:102px;height:102px;display:block;margin:0 auto 4px;filter:drop-shadow(0 0 16px rgba(240,165,0,.55))}
 .logo-img {
   width: 200px;
   height: 200px;
