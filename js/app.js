@@ -59,36 +59,152 @@ const demoTrades = [
   { id: 3, instrument: 'GBP/USD', type: 'Long', lot_size: 0.08, entry: 1.2678, take_profit: 1.273, stop_loss: 1.264, status: 'CLOSED', profit: -34.1, confidence: 79, timeframe: '5M', result: 'LOSS' }
 ];
 
-function drawChart() {
-  const ctx = document.getElementById('mainChart');
-  if (!ctx || typeof Chart === 'undefined') return;
-  const prices = [1936,1938,1939,1941,1940,1944,1947,1945,1949,1951,1948,1952,1954,1953,1956,1958,1957,1959,1961,1963];
-  const tp = prices.map(() => 1960);
-  const sl = prices.map(() => 1930);
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: prices.map((_, i) => i + 1),
-      datasets: [
-        { data: prices, borderColor: '#f0a500', borderWidth: 2, pointRadius: 0, tension: 0.35 },
-        { data: tp, borderColor: '#00c853', borderWidth: 1.2, pointRadius: 0, borderDash: [7, 5] },
-        { data: sl, borderColor: '#ff3d3d', borderWidth: 1.2, pointRadius: 0, borderDash: [7, 5] }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { display: false, grid: { color: 'rgba(255,255,255,0.06)' } },
-        y: {
-          position: 'right',
-          ticks: { color: '#8892a4' },
-          grid: { color: 'rgba(255,255,255,0.08)' }
-        }
-      }
-    }
+// ===== CANDLESTICK CHART =====
+function drawCandlestickChart() {
+  const canvas = document.getElementById('candlestick-chart');
+  if (!canvas) return;
+  
+  // Set actual pixel size
+  canvas.width = canvas.offsetWidth || 300;
+  canvas.height = 180;
+  
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width;
+  const height = canvas.height;
+  
+  // Clear
+  ctx.clearRect(0, 0, width, height);
+  
+  // Background grid
+  ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 4; i++) {
+    const y = (height / 4) * i;
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(width, y);
+    ctx.stroke();
+  }
+
+  // Generate realistic candle data for XAU/USD around 1930-1960
+  const candles = [];
+  let price = 1935;
+  const numCandles = 20;
+  
+  for (let i = 0; i < numCandles; i++) {
+    const open = price;
+    const change = (Math.random() - 0.45) * 8;
+    const close = open + change;
+    const high = Math.max(open, close) + Math.random() * 4;
+    const low = Math.min(open, close) - Math.random() * 4;
+    candles.push({ open, close, high, low });
+    price = close;
+  }
+
+  // Price range
+  const allPrices = candles.flatMap(c => [c.high, c.low]);
+  const minPrice = Math.min(...allPrices) - 2;
+  const maxPrice = Math.max(...allPrices) + 2;
+  const priceRange = maxPrice - minPrice;
+
+  function toY(price) {
+    return height - ((price - minPrice) / priceRange) * (height - 20) - 10;
+  }
+
+  // Padding
+  const padLeft = 8;
+  const padRight = 8;
+  const chartWidth = width - padLeft - padRight;
+  const candleWidth = chartWidth / numCandles;
+  const bodyWidth = Math.max(candleWidth * 0.6, 4);
+
+  // Draw BUY signal line (dashed green at bottom)
+  const buyPrice = 1930;
+  const buyY = toY(buyPrice);
+  ctx.setLineDash([4, 4]);
+  ctx.strokeStyle = '#00c853';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(0, buyY);
+  ctx.lineTo(width, buyY);
+  ctx.stroke();
+
+  // Draw SELL signal line (dashed red at top)
+  const sellPrice = maxPrice - 2;
+  const sellY = toY(sellPrice);
+  ctx.strokeStyle = '#ff1744';
+  ctx.beginPath();
+  ctx.moveTo(0, sellY);
+  ctx.lineTo(width, sellY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Draw candles
+  candles.forEach((candle, i) => {
+    const x = padLeft + i * candleWidth + candleWidth / 2;
+    const isGreen = candle.close >= candle.open;
+    const color = isGreen ? '#00c853' : '#ff1744';
+
+    // Wick
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(x, toY(candle.high));
+    ctx.lineTo(x, toY(candle.low));
+    ctx.stroke();
+
+    // Body
+    const bodyTop = toY(Math.max(candle.open, candle.close));
+    const bodyBottom = toY(Math.min(candle.open, candle.close));
+    const bodyHeight = Math.max(bodyBottom - bodyTop, 2);
+    
+    ctx.fillStyle = color;
+    ctx.fillRect(x - bodyWidth / 2, bodyTop, bodyWidth, bodyHeight);
   });
+
+  // Draw BUY arrow signal on last green candle
+  const lastGreen = candles.reduce((last, c, i) => c.close > c.open ? i : last, 10);
+  const arrowX = padLeft + lastGreen * candleWidth + candleWidth / 2;
+  const arrowY = toY(candles[lastGreen].low) + 12;
+  
+  ctx.fillStyle = '#00c853';
+  ctx.font = 'bold 14px Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText('▲', arrowX, arrowY);
+  ctx.font = 'bold 8px Arial';
+  ctx.fillText('BUY', arrowX, arrowY + 10);
+
+  // Draw time markers at bottom
+  ctx.fillStyle = 'rgba(255,255,255,0.4)';
+  ctx.font = '8px Arial';
+  ctx.textAlign = 'center';
+  const now = new Date();
+  for (let i = 0; i < numCandles; i += 4) {
+    const t = new Date(now.getTime() - (numCandles - i) * 60000);
+    const timeStr = t.getHours().toString().padStart(2,'0') + ':' + t.getMinutes().toString().padStart(2,'0');
+    const x = padLeft + i * candleWidth + candleWidth / 2;
+    ctx.fillText(timeStr, x, height - 2);
+    
+    // Vertical dotted time line
+    ctx.setLineDash([2, 4]);
+    ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, height - 12);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // Price labels on right side
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.font = '8px Arial';
+  ctx.textAlign = 'right';
+  for (let i = 0; i <= 4; i++) {
+    const p = minPrice + (priceRange / 4) * i;
+    const y = toY(p);
+    ctx.fillText(p.toFixed(0), width - 2, y + 3);
+  }
 }
 
 function updateSignalPanel(t) {
@@ -164,7 +280,9 @@ window.addEventListener('click', (e) => {
   if (e.target.id === 'signalModal') closeModal();
 });
 
-drawChart();
+drawCandlestickChart();
+setInterval(drawCandlestickChart, 60000);
+window.addEventListener('resize', drawCandlestickChart);
 loadDashboard();
 
 // ===== AI SIGNAL POPUP =====
