@@ -6,14 +6,7 @@
   <title>CTS Trade Guardian — Trade Journal</title>
   <link rel="stylesheet" href="css/style.css" />
   <style>
-    /* ===== JOURNAL PAGE — compact, no empty space ===== */
-    .journal-wrap {
-      max-width: 480px;
-      margin: 0 auto;
-      padding: 10px 14px 80px;
-      position: relative;
-      z-index: 1;
-    }
+    .journal-wrap { max-width:480px; margin:0 auto; padding:10px 14px 80px; position:relative; z-index:1; }
     .journal-header { text-align:center; padding:8px 0 4px; }
     .journal-header h1 { font-size:22px; font-weight:900; color:#fff; }
     .journal-tab-bar { display:flex; background:#0d1117; border:1px solid rgba(240,165,0,.25); border-radius:14px; padding:4px; gap:4px; margin:8px 0; }
@@ -24,6 +17,15 @@
     .journal-stats .stat-label { font-size:10px; color:#8892a4; text-transform:uppercase; letter-spacing:.8px; }
     .journal-stats .stat-value { font-size:15px; font-weight:800; margin-top:2px; }
     .gold-streak-j { width:100%; height:2px; margin:4px 0 10px; background:linear-gradient(90deg,transparent,#f0a500,#ffd700,#f0a500,transparent); box-shadow:0 0 10px rgba(240,165,0,.8); border-radius:2px; }
+    .journal-chart-box { background:linear-gradient(145deg,#0a1628,#0d2137); border:1px solid #1a3a5c; border-radius:12px; padding:10px; margin-bottom:10px; }
+    .journal-chart-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+    .journal-chart-header span { color:#fff; font-size:12px; font-weight:700; }
+    .journal-chart-header .m1-badge { background:#f0a500; color:#000; font-size:10px; font-weight:700; padding:2px 8px; border-radius:4px; }
+    #journalCandleChart { width:100%; height:130px; display:block; }
+    .journal-chart-labels { display:flex; justify-content:space-between; margin-top:4px; }
+    .journal-chart-labels span { font-size:10px; font-weight:700; padding:2px 8px; border-radius:4px; color:#fff; }
+    .j-sell { background:#ff1744; }
+    .j-buy  { background:#00c853; }
     #tradeList { display:flex; flex-direction:column; gap:8px; }
     .journal-footer { text-align:center; font-size:10px; color:#8892a4; padding:12px 6px 4px; }
   </style>
@@ -50,6 +52,19 @@
     </div>
 
     <div class="gold-streak-j"></div>
+
+    <!-- CANDLESTICK CHART -->
+    <div class="journal-chart-box">
+      <div class="journal-chart-header">
+        <span>XAU/USD - Gold</span>
+        <span class="m1-badge">M1</span>
+      </div>
+      <canvas id="journalCandleChart" style="width:100%;height:130px;display:block;"></canvas>
+      <div class="journal-chart-labels">
+        <span class="j-sell">SELL</span>
+        <span class="j-buy">BUY</span>
+      </div>
+    </div>
 
     <div id="tradeList"><div class="spinner"></div></div>
 
