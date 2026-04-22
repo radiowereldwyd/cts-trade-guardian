@@ -295,9 +295,10 @@ window.addEventListener('load', function() {
   setTimeout(function() {
     drawCandlestickChart();
   }, CHART_RENDER_DELAY_MS);
+
+  setInterval(drawCandlestickChart, 60000);
 });
 
-setInterval(drawCandlestickChart, 60000);
 window.addEventListener('resize', function() {
   setTimeout(drawCandlestickChart, CHART_RESIZE_DEBOUNCE_MS);
 });
@@ -310,7 +311,7 @@ setTimeout(function() {
   if (popup) popup.classList.add('active');
 }, SIGNAL_POPUP_DELAY_MS);
 
-document.addEventListener('DOMContentLoaded', function() {
+function initializeSignalPopupHandlers() {
   const closeBtn = document.getElementById('popupCloseBtn');
   const overlay = document.getElementById('signalPopup');
 
@@ -327,4 +328,10 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   }
-});
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeSignalPopupHandlers);
+} else {
+  initializeSignalPopupHandlers();
+}
