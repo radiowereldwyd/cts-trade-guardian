@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CTS Trade Guardian — Trade Journal</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <main class="page-container">
+    <header class="app-header">
+      <h1 class="page-title">Trade Journal</h1>
+    </header>
+
+    <section class="tab-bar">
+      <button class="tab-btn active" onclick="filterTrades('ALL', this)">All</button>
+      <button class="tab-btn" onclick="filterTrades('Long', this)">Long</button>
+      <button class="tab-btn" onclick="filterTrades('Short', this)">Short</button>
+      <button class="tab-btn" onclick="filterTrades('Swing', this)">Swing</button>
+    </section>
+
+    <section class="stats-bar">
+      <div class="stat-item"><div class="stat-label">Total Profit</div><div id="totalProfit" class="stat-value pos">+$0.00</div></div>
+      <div class="stat-item"><div class="stat-label">Wins</div><div id="totalWins" class="stat-value pos">0</div></div>
+      <div class="stat-item"><div class="stat-label">Losses</div><div id="totalLosses" class="stat-value neg">0</div></div>
+    </section>
+
+    <section class="signal-chart-grid">
+      <article class="signal-panel">
+        <div class="signal-title">AI SIGNAL</div>
+        <div id="journalSignalBadge" class="signal-badge bullish">BULLISH</div>
+        <div class="signal-row">Trade Type: <b id="journalSignalType">Long</b></div>
+        <div class="signal-row">Lot Size: <b id="journalSignalLot">0.05</b></div>
+        <div class="signal-row">Status: <b id="journalSignalStatus" class="open">OPEN</b></div>
+        <div class="signal-row">Take Profit: <b id="journalSignalTP" class="tp">1960.00</b></div>
+        <div class="signal-row">Stop Loss: <b id="journalSignalSL" class="sl">1930.00</b></div>
+      </article>
+      <article class="chart-panel">
+        <h2 class="chart-title">XAU/USD - Gold</h2>
+        <div class="chart-canvas-wrap">
+          <canvas id="journalChart"></canvas>
+          <span class="chart-buy-label">BUY</span>
+          <span class="chart-sell-label">SELL</span>
+        </div>
+      </article>
+    </section>
+
+    <div id="tradeList"><div class="spinner"></div></div>
+    <div class="track-banner">Track Your Trading Success</div>
+    <footer class="footer">© 2026 CTS Cyber Solutions - All Rights Reserved.</footer>
+  </main>
+
+  <nav class="bottom-nav">
+    <a class="nav-btn" href="index.html"><span>🏠</span>Dashboard</a>
+    <a class="nav-btn active" href="journal.html"><span>📋</span>Trade Journal</a>
+    <a class="nav-btn" href="settings.html"><span>⚙️</span>Settings</a>
+  </nav>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/journal.js"></script>
+</body>
+</html>
