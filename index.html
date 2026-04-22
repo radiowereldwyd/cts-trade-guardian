@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CTS Trade Guardian — Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <main class="page-container">
+    <header class="app-header">
+      <svg class="logo-svg" viewBox="0 0 120 120" aria-hidden="true">
+        <defs>
+          <linearGradient id="shieldGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2aa3ff"/><stop offset="100%" stop-color="#00c853"/></linearGradient>
+          <linearGradient id="wingGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#f7fbff"/><stop offset="100%" stop-color="#93a0b2"/></linearGradient>
+        </defs>
+        <path d="M12 62l22-10-22-10 7 20-7 20zm96 0L86 52l22-10-7 20 7 20z" fill="url(#wingGrad)"/>
+        <path d="M60 12l24 9v29c0 18-11 33-24 41-13-8-24-23-24-41V21z" fill="url(#shieldGrad)" stroke="#d9dee6" stroke-width="2"/>
+        <path d="M48 58l8-8 7 5 11-14" fill="none" stroke="#f0a500" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <rect x="38" y="66" width="7" height="13" fill="#f0a500"/><rect x="50" y="60" width="7" height="19" fill="#f0a500"/><rect x="62" y="54" width="7" height="25" fill="#f0a500"/>
+        <path d="M50 18h20l-4 8H54z" fill="#cfd4dc"/>
+        <circle cx="42" cy="29" r="2" fill="#ffd700"/><circle cx="60" cy="25" r="2" fill="#ffd700"/><circle cx="78" cy="29" r="2" fill="#ffd700"/>
+      </svg>
+      <div class="logo-cts">CTS</div>
+      <div class="logo-sub">Trade Guardian</div>
+      <div class="logo-tagline">Your Smart Trading Protector</div>
+      <hr class="gold-streak" />
+    </header>
+
+    <section class="signal-chart-grid">
+      <article class="signal-panel">
+        <div class="signal-title">AI SIGNAL</div>
+        <div id="signalBadge" class="signal-badge bullish">BULLISH</div>
+        <div class="signal-row">Trade Type: <b id="signalTradeType">Long</b></div>
+        <div class="signal-row">Lot Size: <b id="signalLotSize">0.05</b></div>
+        <div class="signal-row">Status: <b id="signalStatus" class="open">OPEN</b></div>
+        <div class="signal-row">Take Profit: <b id="signalTakeProfit" class="tp">1960.00</b></div>
+        <div class="signal-row">Stop Loss: <b id="signalStopLoss" class="sl">1930.00</b></div>
+      </article>
+      <article class="chart-panel">
+        <h2 class="chart-title">XAU/USD - Gold</h2>
+        <div class="chart-canvas-wrap">
+          <canvas id="mainChart"></canvas>
+          <span class="chart-buy-label">BUY</span>
+          <span class="chart-sell-label">SELL</span>
+        </div>
+      </article>
+    </section>
+
+    <section class="current-trade-bar">
+      <div class="current-trade-row">
+        <span>Current Trade</span>
+        <span>Trade Type: <b id="currentTradeType">Long</b></span>
+        <span id="currentTradeProfit" class="stat-value pos">+$245.80</span>
+      </div>
+      <div class="current-trade-row">
+        <span>Session Stats</span>
+        <span>Wins: <b id="winsCount">8</b></span>
+        <span>Losses: <b id="lossesCount" style="color:var(--red)">2</b> | 📈</span>
+      </div>
+    </section>
+
+    <hr class="gold-streak" />
+    <div class="track-banner">Your Smart Trading Protector</div>
+
+    <footer class="footer">© 2026 CTS Cyber Solutions - All Rights Reserved.</footer>
+  </main>
+
+  <nav class="bottom-nav">
+    <a class="nav-btn active" href="index.html"><span>🏠</span>Dashboard</a>
+    <a class="nav-btn" href="journal.html"><span>📋</span>Trade Journal</a>
+    <a class="nav-btn" href="settings.html"><span>⚙️</span>Settings</a>
+  </nav>
+
+  <div id="signalModal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <div class="modal-top-bar"></div>
+      <div class="modal-content">
+        <h3 class="modal-title">⚡ AI SIGNAL ALERT!</h3>
+        <p class="modal-subtitle">New Bullish Opportunity!</p>
+        <div class="modal-grid">
+          <div>
+            <div class="modal-info-row"><span>Instrument</span><b id="modalInstrument">XAU/USD</b></div>
+            <div class="modal-info-row"><span>Trade Type</span><b id="modalType">Long</b></div>
+            <div class="modal-info-row"><span>Entry Price</span><b id="modalEntry">1942.15</b></div>
+            <div class="modal-info-row"><span>Take Profit</span><b id="modalTP">1960.00</b></div>
+            <div class="modal-info-row"><span>Probability</span><b id="modalProbability">86%</b></div>
+          </div>
+          <div class="modal-emoji">🐂</div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-confirm" onclick="confirmTrade()">CONFIRM TRADE</button>
+          <button class="btn-cancel" onclick="closeModal()">CANCEL</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CTS Trade Guardian — Settings</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <main class="page-container">
+    <header class="app-header">
+      <svg class="logo-svg" viewBox="0 0 120 120" aria-hidden="true">
+        <defs>
+          <linearGradient id="shieldGradS" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2aa3ff"/><stop offset="100%" stop-color="#00c853"/></linearGradient>
+          <linearGradient id="wingGradS" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#f7fbff"/><stop offset="100%" stop-color="#93a0b2"/></linearGradient>
+        </defs>
+        <path d="M12 62l22-10-22-10 7 20-7 20zm96 0L86 52l22-10-7 20 7 20z" fill="url(#wingGradS)"/>
+        <path d="M60 12l24 9v29c0 18-11 33-24 41-13-8-24-23-24-41V21z" fill="url(#shieldGradS)" stroke="#d9dee6" stroke-width="2"/>
+        <path d="M48 58l8-8 7 5 11-14" fill="none" stroke="#f0a500" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <rect x="38" y="66" width="7" height="13" fill="#f0a500"/><rect x="50" y="60" width="7" height="19" fill="#f0a500"/><rect x="62" y="54" width="7" height="25" fill="#f0a500"/>
+        <path d="M50 18h20l-4 8H54z" fill="#cfd4dc"/>
+        <circle cx="42" cy="29" r="2" fill="#ffd700"/><circle cx="60" cy="25" r="2" fill="#ffd700"/><circle cx="78" cy="29" r="2" fill="#ffd700"/>
+      </svg>
+      <div class="logo-cts">CTS</div>
+      <div class="logo-sub">Trade Guardian</div>
+      <h1 class="page-title" style="font-size:24px">Settings</h1>
+    </header>
+
+    <section class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('ALL', this)">All</button>
+      <button class="tab-btn" onclick="switchTab('Long', this)">Long</button>
+      <button class="tab-btn" onclick="switchTab('Short', this)">Short</button>
+      <button class="tab-btn" onclick="switchTab('Swing', this)">Swing</button>
+    </section>
+
+    <section class="stats-bar">
+      <div class="stat-item"><div class="stat-label">Total Profit</div><div id="setsProfit" class="stat-value pos">+$0.00</div></div>
+      <div class="stat-item"><div class="stat-label">Wins</div><div id="setsWins" class="stat-value pos">0</div></div>
+      <div class="stat-item"><div class="stat-label">Losses</div><div id="setsLosses" class="stat-value neg">0</div></div>
+    </section>
+
+    <h2 class="section-header">Subscription &amp; Payments</h2>
+    <div id="settingsTradeList"><div class="spinner"></div></div>
+
+    <h2 class="section-header">🤖 AI Strategy Options</h2>
+    <div class="strategy-card">
+      <div class="strategy-item"><div><div class="strategy-title">Dynamic Lot Sizing</div><div class="strategy-sub">Max risk 2% per trade</div></div><label class="toggle-switch"><input type="checkbox" checked onchange="saveStrategy('Dynamic Lot Sizing', this.checked)"/><span class="toggle-slider"></span></label></div>
+      <div class="strategy-item"><div><div class="strategy-title">Multi-Timeframe Confirm</div><div class="strategy-sub">1H + 15M + 5M must all agree</div></div><label class="toggle-switch"><input type="checkbox" checked onchange="saveStrategy('Multi-Timeframe Confirm', this.checked)"/><span class="toggle-slider"></span></label></div>
+      <div class="strategy-item"><div><div class="strategy-title">Adaptive Stop-Loss</div><div class="strategy-sub">Trailing stop at 50% of target</div></div><label class="toggle-switch"><input type="checkbox" checked onchange="saveStrategy('Adaptive Stop-Loss', this.checked)"/><span class="toggle-slider"></span></label></div>
+      <div class="strategy-item"><div><div class="strategy-title">AI Confidence ≥ 80%</div><div class="strategy-sub">Only high probability trades</div></div><label class="toggle-switch"><input type="checkbox" checked onchange="saveStrategy('AI Confidence ≥ 80%', this.checked)"/><span class="toggle-slider"></span></label></div>
+      <div class="strategy-item"><div><div class="strategy-title">Parallel Strategy Balance</div><div class="strategy-sub">Scalping + Swing together</div></div><label class="toggle-switch"><input type="checkbox" checked onchange="saveStrategy('Parallel Strategy Balance', this.checked)"/><span class="toggle-slider"></span></label></div>
+      <div class="strategy-item"><div><div class="strategy-title">Continuous Learning</div><div class="strategy-sub">Weekly recalibration</div></div><label class="toggle-switch"><input type="checkbox" checked onchange="saveStrategy('Continuous Learning', this.checked)"/><span class="toggle-slider"></span></label></div>
+    </div>
+
+    <div class="menu-item"><span>📞 App Support</span><span class="chevron">›</span></div>
+    <div class="menu-item"><span>⚖️ Legal &amp; Privacy</span><span class="chevron">›</span></div>
+
+    <div class="track-banner">Your Smart Trading Protector</div>
+    <footer class="footer">© 2026 CTS Cyber Solutions - All Rights Reserved.</footer>
+  </main>
+
+  <nav class="bottom-nav">
+    <a class="nav-btn" href="index.html"><span>🏠</span>Dashboard</a>
+    <a class="nav-btn" href="journal.html"><span>📋</span>Trade Journal</a>
+    <a class="nav-btn active" href="settings.html"><span>⚙️</span>Settings</a>
+  </nav>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/settings.js"></script>
+</body>
+</html>
